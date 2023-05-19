@@ -1,0 +1,49 @@
+
+/* Table */
+
+/* Modal */
+.modal-div {
+    background: rgb(240, 238, 238);
+    padding: 8px;
+    z-index: 9999;
+    color: black;
+    border: 1px solid black;
+    border-radius: 12px 12px 0px 0px;
+}
+.modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    }
+
+/* Alert */
+.alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 8px;
+    color: black;
+    border: 1px solid black;
+    border-radius: 12px 12px 0px 0px;
+}
+.alert-button{
+    background-color: lightblue;
+    color: black;
+    padding: 4px;
+    border-radius: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+}
+
+html body.backdrop-no-scroll ion-alert#ion-overlay-2.sc-ion-alert-h.sc-ion-alert-s.alert.undefined div.alert-wrapper.ion-overlay-wrapper.sc-ion-alert{
+    background-color:rgb(240, 238, 238);;
+    padding: 16px;
+    
+    border: 1px solid black;
+    border-radius: 12px;
+}
+html body.backdrop-no-scroll ion-alert#ion-overlay-2.sc-ion-alert-h.sc-ion-alert-s.alert.undefined div.alert-wrapper.ion-overlay-wrapper.sc-ion-alert div.alert-head.sc-ion-alert h2#alert-4-hdr.alert-title.sc-ion-alert{
+    font-weight: bold;
+}
