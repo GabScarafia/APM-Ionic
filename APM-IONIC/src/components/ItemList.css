@@ -1,11 +1,44 @@
 
 /* Table */
+.table-div {
+    padding: 8px;
+    border-bottom: 1px solid gainsboro;
+    display: flex;
+    align-items: center;
+    z-index: 9999;
+    justify-content: space-between;
+}
 
+.table-cross-button {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  .table-cross-button:before,
+  .table-cross-button:after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 3px;
+    background-color: darkred;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .table-cross-button:before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  .table-cross-button:after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
 /* Modal */
 .modal-div {
     background: rgb(240, 238, 238);
     padding: 8px;
-    z-index: 9999;
+    z-index: 1;
     color: black;
     border: 1px solid black;
     border-radius: 12px 12px 0px 0px;
@@ -16,34 +49,66 @@
     left: 0;
     right: 0;
     }
-
+    .modal-cross-button {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+      }
+      .modal-cross-button:before,
+      .modal-cross-button:after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 3px;
+        background-color: black;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .modal-cross-button:before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+      .modal-cross-button:after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
 /* Alert */
 .alert {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    background-color: white;
     padding: 8px;
     color: black;
     border: 1px solid black;
-    border-radius: 12px 12px 0px 0px;
 }
-.alert-button{
+.alert-button-cancel{
     background-color: lightblue;
     color: black;
-    padding: 4px;
+    padding: 8px;
+    font-size: large;
     border-radius: 4px;
     margin-right: 4px;
     margin-top: 4px;
 }
-
-html body.backdrop-no-scroll ion-alert#ion-overlay-2.sc-ion-alert-h.sc-ion-alert-s.alert.undefined div.alert-wrapper.ion-overlay-wrapper.sc-ion-alert{
+.alert-button-do{
+    background-color: red;
+    color: white;
+    padding: 8px;
+    font-size: large;
+    border-radius: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+}
+/* html body.backdrop-no-scroll ion-alert#ion-overlay-2.sc-ion-alert-h.sc-ion-alert-s.alert.undefined div.alert-wrapper.ion-overlay-wrapper.sc-ion-alert{
     background-color:rgb(240, 238, 238);;
     padding: 16px;
-    
     border: 1px solid black;
     border-radius: 12px;
 }
 html body.backdrop-no-scroll ion-alert#ion-overlay-2.sc-ion-alert-h.sc-ion-alert-s.alert.undefined div.alert-wrapper.ion-overlay-wrapper.sc-ion-alert div.alert-head.sc-ion-alert h2#alert-4-hdr.alert-title.sc-ion-alert{
     font-weight: bold;
-}
+} */

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { IonList, IonItem, IonModal, IonAlert } from '@ionic/react';
 import './itemList.css';
+import { Preferences } from '@capacitor/preferences';
+import { Toast } from '@capacitor/toast';
 
 interface Item {
   id: number;
@@ -52,32 +54,56 @@ const ItemList: React.FC<ItemListProps> = ({ items, onDelete }) => {
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  function getPokeInfo(item : Item){
-    fetch(item.additionalInfo)
-      .then((response) => response.json())
-      .then((data: Pokemon) => {
-        setSelectedPokemon(data);
-      })
-      .catch((error) => {
-      });
+  function getPokeInfo(item: Item) {
+    const loadPokemonFromAPI = () => {
+      fetch(item.additionalInfo)
+        .then(response => response.json())
+        .then((data: Pokemon) => {
+          setSelectedPokemon(data);
+          Preferences.set({ key: data.name, value: JSON.stringify(data) });
+        })
+        .catch(async () => {
+          await Toast.show({
+            text: 'Error en la API',
+            duration: 'long'
+          });
+        });
+    };
+  
+    const loadPokemonFromPreferences = async () => {
+      const storedPokemon = await Preferences.get({ key: 'selectedPokemon' });
+      if (storedPokemon.value) {
+        setSelectedPokemon(JSON.parse(storedPokemon.value));
+      } else {
+        loadPokemonFromAPI();
+      }
+    };
+  
+    loadPokemonFromPreferences();
   }
 
   const handleItemClick = (item: Item) => {
-    setSelectedItem(item);
-    getPokeInfo(item);
-    setShowModal(true);
+    if(item != selectedItem){
+      setSelectedItem(item);
+      getPokeInfo(item);
+      setShowModal(true);
+    }else{
+      setSelectedItem(null);
+    }
+    
   };
 
-  const handleDeleteClick = (id: number) => {
-    setSelectedItem(items.find(item => item.id === id) || null);
-    setShowAlert(true);
+  const handleCrossClick = () => {
+    setSelectedItem(null);
+    setShowModal(false);
   };
   
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async() => {
     if (selectedItem) {
+      setShowModal(false);
       const deletedItemId = selectedItem.id;
-      onDelete(deletedItemId);
       setSelectedItem(null);
+      onDelete(deletedItemId);
       const updatedItems = items.filter(item => item.id !== deletedItemId);
       updatedItems.forEach(item => {
         if(item.id >= deletedItemId){
@@ -85,6 +111,11 @@ const ItemList: React.FC<ItemListProps> = ({ items, onDelete }) => {
         }
       });
       items.splice(0, items.length, ...updatedItems);
+      await Toast.show({
+        text: 'Elemento eliminado exitosamente',
+        duration: 'long'
+      });
+      
     }
     setShowAlert(false);
   };
@@ -94,9 +125,11 @@ const ItemList: React.FC<ItemListProps> = ({ items, onDelete }) => {
       <IonList>
         {items.map(item => (
            <IonItem key={item.id} onClick={()=>handleItemClick(item)}>
-              <div style={{padding:8 }} >
-                  <h1>{item.name}</h1>
-                  <button onClick={() => setShowAlert(true)}>Eliminar</button>
+              <div className='table-div' >
+                  <h1>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</h1>
+                  <button className='table-cross-button' onClick={() => setShowAlert(true)} >
+                    ✖
+                  </button>
               </div>
           </IonItem>
         ))}
@@ -106,9 +139,13 @@ const ItemList: React.FC<ItemListProps> = ({ items, onDelete }) => {
         {selectedItem && (
           <>
             <div className='modal-div'>
-                <h1 style={{fontWeight:'bold'}}>{selectedItem.name}</h1>
+                <div  className='table-div'>
+                  <h1 style={{fontWeight:'bold'}}>{selectedItem.name.charAt(0).toUpperCase() + selectedItem.name.slice(1)}</h1>
+                  <button className='modal-cross-button' onClick={() => handleCrossClick()} >
+                    ✖
+                  </button>
+                </div>
                 <p><b> Pokedex: </b>{selectedPokemon ? selectedPokemon.id : " "}<br/><b> Type: </b>{selectedPokemon ? selectedPokemon.types[0].type.name : " "}<br/><b>Weight: </b>{selectedPokemon ? selectedPokemon.weight : " "}</p>
-                <button onClick={() => setShowAlert(true)}>Eliminar</button>
             </div>
           </>
         )}
@@ -121,7 +158,7 @@ const ItemList: React.FC<ItemListProps> = ({ items, onDelete }) => {
           {
             text: 'Cancelar',
             role: 'cancel',
-            cssClass: 'alert-button',
+            cssClass: 'alert-button-cancel',
             handler: () => {
               setShowAlert(false);
             },
@@ -130,7 +167,7 @@ const ItemList: React.FC<ItemListProps> = ({ items, onDelete }) => {
           {
             text: 'Eliminar',
             handler: handleConfirmDelete,
-            cssClass: 'alert-button',
+            cssClass: 'alert-button-do',
           },
         ]}
         cssClass="alert"
